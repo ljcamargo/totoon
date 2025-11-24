@@ -42,6 +42,18 @@ A modern, privacy-focused web application for converting between JSON, YAML, and
 
 4.  Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Environment Variables
+
+This project uses Google AdSense. To configure it locally:
+
+1.  Copy `.env.example` to `.env.local`:
+    ```bash
+    cp .env.example .env.local
+    ```
+2.  Open `.env.local` and replace the placeholders with your actual AdSense values:
+    *   `NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT_ID`: Your Publisher ID (e.g., `ca-pub-1234567890`)
+    *   `NEXT_PUBLIC_GOOGLE_ADSENSE_SLOT_ID`: Your Ad Slot ID
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
