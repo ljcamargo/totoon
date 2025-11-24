@@ -22,14 +22,12 @@ const GoogleAdSense = () => {
     }
 
     return (
-        <div className="w-[300px] h-[250px] overflow-hidden rounded-xl bg-white/5">
+        <div className="w-[300px] h-[250px] overflow-hidden rounded-xl bg-white/5 mx-auto">
             <ins
                 className="adsbygoogle"
-                style={{ display: 'block', width: '300px', height: '250px' }}
+                style={{ display: 'inline-block', width: '300px', height: '250px' }}
                 data-ad-client={clientId}
                 data-ad-slot={slotId}
-                data-ad-format="auto"
-                data-full-width-responsive="true"
             ></ins>
         </div>
     );
