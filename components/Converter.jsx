@@ -127,14 +127,14 @@ const Converter = () => {
         <div className="w-full max-w-7xl mx-auto p-6">
             {/* Top Section: Title & Ad */}
             <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
-                <div className="flex-1 pt-4">
-                    <h1 className="text-5xl md:text-7xl font-black text-white mb-4 tracking-tight">
+                <div className="flex-1 pt-0">
+                    <h1 className="text-5xl md:text-7xl font-black text-white mb-4 tracking-tight hidden md:block">
                         TOON <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">CONVERTER</span>
                     </h1>
-                    <p className="text-xl text-gray-400 font-light mb-6">
-                        Convert TOON to JSON/YAML and vice versa.
+                    <p className="text-xl text-gray-400 font-light mb-2 ml-2">
+                        Convert TOON to JSON/YAML and vs.
                         <br />
-                        <span className="text-sm text-gray-500 mt-2 block">Optimized for LLM token efficiency.</span>
+                        <span className="text-sm text-gray-500 mt-2 hidden md:block">Serialization Optimized for LLM token efficiency.</span>
                     </p>
 
                     {/* Quick Actions */}
@@ -156,21 +156,21 @@ const Converter = () => {
                 <div className="hidden md:block">
                     <EthicalAds />
                 </div>
-            </div>
+            </div >
 
             {/* Converter Section */}
-            <div className="flex flex-col lg:flex-row gap-6 items-stretch">
+            < div className="flex flex-col lg:flex-row gap-6 items-stretch" >
 
                 {/* Left Panel (Input) */}
-                <div className="flex-1 flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 transition-all duration-300">
+                < div className="flex-1 flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 transition-all duration-300" >
                     <div className="flex flex-col border-b border-white/5 bg-white/[0.02]">
-                        <div className="flex items-center justify-between p-4">
+                        <div className="flex flex-wrap items-center justify-between p-4 gap-y-2">
                             <CustomSelect
                                 value={fromFormat}
                                 onChange={setFromFormat}
                                 options={formatOptions}
                             />
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 ml-auto">
                                 <span className="text-xs font-mono text-gray-500 mr-2">{stats.inputTokens} tokens</span>
 
                                 {/* Config Toggle */}
@@ -228,17 +228,23 @@ const Converter = () => {
                         language={fromFormat}
                         placeholder="Paste your code here..."
                     />
+                </div >
+
+                {/* Mobile Ad Placement */}
+                <div className="md:hidden w-full">
+                    <EthicalAds />
                 </div>
 
                 {/* Middle Actions */}
                 <div className="flex lg:flex-col items-center justify-center gap-4">
                     <button
                         onClick={handleSwap}
-                        className="group p-4 bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 rounded-full transition-all duration-300"
+                        className="group px-6 py-3 lg:p-4 bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 rounded-full transition-all duration-300 flex items-center gap-2"
                         title="Swap Formats"
                     >
                         <ArrowRightLeft className="w-6 h-6 text-gray-400 group-hover:text-purple-400 transition-colors hidden lg:block" />
-                        <ArrowUpDown className="w-6 h-6 text-gray-400 group-hover:text-purple-400 transition-colors lg:hidden" />
+                        <ArrowUpDown className="w-5 h-5 text-gray-400 group-hover:text-purple-400 transition-colors lg:hidden" />
+                        <span className="text-sm font-medium text-gray-400 group-hover:text-purple-400 transition-colors lg:hidden">Swap</span>
                     </button>
 
                     <div className="w-px h-full bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block"></div>
@@ -247,17 +253,17 @@ const Converter = () => {
                 {/* Right Panel (Output) */}
                 <div className="flex-1 flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 relative transition-all duration-300">
                     <div className="flex flex-col border-b border-white/5 bg-white/[0.02]">
-                        <div className="flex items-center justify-between p-4">
+                        <div className="flex flex-wrap items-center justify-between p-4 gap-y-2">
                             <CustomSelect
                                 value={toFormat}
                                 onChange={setToFormat}
                                 options={formatOptions}
                             />
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 ml-auto">
                                 {stats.reduction !== 0 && (
                                     <span className={`text-xs font-bold px-2 py-1 rounded mr-2 ${Number(stats.reduction) > 0
-                                            ? 'text-green-400 bg-green-400/10'
-                                            : 'text-red-400 bg-red-400/10'
+                                        ? 'text-green-400 bg-green-400/10'
+                                        : 'text-red-400 bg-red-400/10'
                                         }`}>
                                         {Number(stats.reduction) > 0
                                             ? `-${stats.reduction}%`
@@ -363,9 +369,9 @@ const Converter = () => {
                             </div>
                         )}
                     </div>
-                </div>
-            </div>
-        </div>
+                </div >
+            </div >
+        </div >
     );
 };
 

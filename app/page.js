@@ -12,7 +12,7 @@ export default function Home() {
 
       <Header />
 
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center py-10">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
         <Converter />
       </div>
 

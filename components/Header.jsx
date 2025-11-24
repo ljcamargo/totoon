@@ -6,7 +6,9 @@ const Header = () => {
             <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <img src="/totoon.svg" alt="TOTOON Logo" className="w-8 h-8" />
-                    <span className="font-bold text-xl tracking-tight text-white">TOTOON</span>
+                    <span className="font-bold text-xl tracking-tight text-white">
+                        TOON <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">CONVERTER</span>
+                    </span>
                 </div>
                 <nav className="flex items-center gap-6 text-sm font-medium text-gray-400">
                     <a href="/info" className="hover:text-white transition-colors">Info</a>
