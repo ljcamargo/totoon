@@ -15,6 +15,8 @@ const CustomSelect = ({ value, onChange, options, icon }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    const selectedLabel = options.find(opt => opt.value === value)?.label || value;
+
     return (
         <div className="relative" ref={ref}>
             <button
@@ -23,7 +25,7 @@ const CustomSelect = ({ value, onChange, options, icon }) => {
             >
                 <div className="flex items-center gap-2">
                     {icon}
-                    <span>{value}</span>
+                    <span>{selectedLabel}</span>
                 </div>
                 <ChevronDown
                     className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
