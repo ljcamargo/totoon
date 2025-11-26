@@ -104,9 +104,25 @@ const Converter = () => {
         URL.revokeObjectURL(url);
     };
 
+    const detectFormat = (filename) => {
+        const ext = filename.split('.').pop().toLowerCase();
+        if (ext === 'json') return 'JSON';
+        if (ext === 'yaml' || ext === 'yml') return 'YAML';
+        if (ext === 'toon') return 'TOON';
+        return null;
+    };
+
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
+            const format = detectFormat(file.name);
+            if (format) {
+                setFromFormat(format);
+                if (format === toFormat) {
+                    setToFormat(format === 'TOON' ? 'JSON' : 'TOON');
+                }
+            }
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 setInput(e.target.result);
@@ -120,6 +136,14 @@ const Converter = () => {
         setIsDragging(false);
         const file = e.dataTransfer.files[0];
         if (file) {
+            const format = detectFormat(file.name);
+            if (format) {
+                setFromFormat(format);
+                if (format === toFormat) {
+                    setToFormat(format === 'TOON' ? 'JSON' : 'TOON');
+                }
+            }
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 setInput(e.target.result);
@@ -138,13 +162,34 @@ const Converter = () => {
         setIsDragging(false);
     };
 
-    const loadExample = () => {
-        setInput('{\n  "hello": "world",\n  "foo": [\n    "bar",\n    "baz"\n  ]\n}');
+    const loadExample = async () => {
+        try {
+            const ext = fromFormat.toLowerCase();
+            const response = await fetch(`/examples/example.${ext}`);
+            if (!response.ok) throw new Error('Failed to load example');
+            const text = await response.text();
+            setInput(text);
+
+            if (fromFormat === toFormat) {
+                setToFormat(fromFormat === 'TOON' ? 'JSON' : 'TOON');
+            }
+        } catch (err) {
+            alert('Error loading example: ' + err.message);
+        }
     };
 
     const handleUrlSubmit = async (e) => {
         e.preventDefault();
         if (!urlInput) return;
+
+        const format = detectFormat(urlInput);
+        if (format) {
+            setFromFormat(format);
+            if (format === toFormat) {
+                setToFormat(format === 'TOON' ? 'JSON' : 'TOON');
+            }
+        }
+
         try {
             const response = await fetch(urlInput);
             if (!response.ok) throw new Error('Failed to fetch URL');
@@ -224,7 +269,7 @@ const Converter = () => {
             <div className="mb-6 text-gray-400 text-lg flex flex-wrap items-center gap-2 animate-in fade-in slide-in-from-top-4 pl-2">
                 <ArrowDown className="w-5 h-5 text-purple-400 animate-bounce" />
                 <span>
-                    Paste a JSON or an{' '}
+                    Paste a {fromFormat} or an{' '}
                     <button
                         onClick={() => setShowUrlInput(true)}
                         className="text-purple-400 hover:text-purple-300 underline decoration-dotted underline-offset-4 transition-colors font-medium"
