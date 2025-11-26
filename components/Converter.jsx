@@ -5,15 +5,18 @@ import { convert, estimateTokens, calculateReduction } from '../utils/converter'
 //import GoogleAdSense from './GoogleAdSense';
 import CustomSelect from './ui/CustomSelect';
 import CodeEditor from './ui/CodeEditor';
-import { ArrowRightLeft, ArrowUpDown, Copy, AlertCircle, ArrowRight, Download, Settings, X } from 'lucide-react';
+import { ArrowRightLeft, ArrowUpDown, Copy, AlertCircle, ArrowRight, Download, Settings, X, ArrowDown } from 'lucide-react';
 
 const Converter = () => {
-    const [input, setInput] = useState('{\n  "hello": "world",\n  "foo": [\n    "bar",\n    "baz"\n  ]\n}');
+    const [input, setInput] = useState('');
+    const [urlInput, setUrlInput] = useState('');
+    const [showUrlInput, setShowUrlInput] = useState(false);
     const [output, setOutput] = useState('');
     const [fromFormat, setFromFormat] = useState('JSON');
     const [toFormat, setToFormat] = useState('TOON');
     const [error, setError] = useState(null);
     const [stats, setStats] = useState({ inputTokens: 0, outputTokens: 0, reduction: 0 });
+    const [isDragging, setIsDragging] = useState(false);
 
     // Config Toggles
     const [showInputConfig, setShowInputConfig] = useState(false);
@@ -36,6 +39,12 @@ const Converter = () => {
 
     const handleConvert = () => {
         setError(null);
+        if (!input.trim()) {
+            setOutput('');
+            setStats({ inputTokens: 0, outputTokens: 0, reduction: 0 });
+            return;
+        }
+
         try {
             const options = {
                 indent,
@@ -93,6 +102,59 @@ const Converter = () => {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    };
+
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setInput(e.target.result);
+            };
+            reader.readAsText(file);
+        }
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setInput(e.target.result);
+            };
+            reader.readAsText(file);
+        }
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const loadExample = () => {
+        setInput('{\n  "hello": "world",\n  "foo": [\n    "bar",\n    "baz"\n  ]\n}');
+    };
+
+    const handleUrlSubmit = async (e) => {
+        e.preventDefault();
+        if (!urlInput) return;
+        try {
+            const response = await fetch(urlInput);
+            if (!response.ok) throw new Error('Failed to fetch URL');
+            const text = await response.text();
+            setInput(text);
+            setShowUrlInput(false);
+            setUrlInput('');
+        } catch (err) {
+            alert('Error fetching URL: ' + err.message);
+        }
     };
 
     // Options Definitions
@@ -158,11 +220,43 @@ const Converter = () => {
                 </div>
             </div >
 
+            {/* Get Started Text */}
+            <div className="mb-6 text-gray-400 text-lg flex flex-wrap items-center gap-2 animate-in fade-in slide-in-from-top-4 pl-2">
+                <ArrowDown className="w-5 h-5 text-purple-400 animate-bounce" />
+                <span>
+                    Paste a JSON or an{' '}
+                    <button
+                        onClick={() => setShowUrlInput(true)}
+                        className="text-purple-400 hover:text-purple-300 underline decoration-dotted underline-offset-4 transition-colors font-medium"
+                    >
+                        URL
+                    </button>
+                    , drop a file,{' '}
+                    <label className="text-purple-400 hover:text-purple-300 underline decoration-dotted underline-offset-4 transition-colors cursor-pointer font-medium">
+                        browse
+                        <input
+                            type="file"
+                            className="hidden"
+                            onChange={handleFileUpload}
+                            accept=".json,.yaml,.yml,.toon,.txt"
+                        />
+                    </label>
+                    , or{' '}
+                    <button
+                        onClick={loadExample}
+                        className="text-purple-400 hover:text-purple-300 underline decoration-dotted underline-offset-4 transition-colors font-medium"
+                    >
+                        load an example
+                    </button>{' '}
+                    to begin.
+                </span>
+            </div>
+
             {/* Converter Section */}
-            < div className="flex flex-col lg:flex-row gap-6 items-stretch" >
+            <div className="flex flex-col lg:flex-row gap-6 items-stretch">
 
                 {/* Left Panel (Input) */}
-                < div className="flex-1 flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 transition-all duration-300" >
+                <div className="flex-1 flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 transition-all duration-300">
                     <div className="flex flex-col border-b border-white/5 bg-white/[0.02]">
                         <div className="flex flex-wrap items-center justify-between p-4 gap-y-2">
                             <CustomSelect
@@ -222,12 +316,31 @@ const Converter = () => {
                         )}
                     </div>
 
-                    <CodeEditor
-                        value={input}
-                        onChange={setInput}
-                        language={fromFormat}
-                        placeholder="Paste your code here..."
-                    />
+                    <div
+                        className={`relative flex-1 flex flex-col min-h-[500px] transition-all duration-200 ${isDragging ? 'ring-2 ring-purple-500 bg-purple-500/10' : ''}`}
+                        onDrop={handleDrop}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                    >
+                        <CodeEditor
+                            value={input}
+                            onChange={(val) => {
+                                setInput(val);
+                            }}
+                            language={fromFormat}
+                            placeholder="Paste your code here..."
+                        />
+
+                        {/* Drag Overlay Cue */}
+                        {isDragging && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10 pointer-events-none">
+                                <div className="text-2xl font-bold text-white flex items-center gap-3">
+                                    <Download className="w-8 h-8 animate-bounce" />
+                                    Drop file to load
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div >
 
                 {/* Mobile Ad Placement */}
@@ -371,6 +484,91 @@ const Converter = () => {
                     </div>
                 </div >
             </div >
+
+            {/* URL Input Modal */}
+            {showUrlInput && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
+                    <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-6 w-full max-w-lg shadow-2xl relative">
+                        <button
+                            onClick={() => setShowUrlInput(false)}
+                            className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                        <h3 className="text-xl font-bold text-white mb-4">Load from URL</h3>
+                        <form onSubmit={handleUrlSubmit} className="space-y-4">
+                            <input
+                                type="url"
+                                value={urlInput}
+                                onChange={(e) => setUrlInput(e.target.value)}
+                                placeholder="https://example.com/data.json"
+                                className="w-full bg-black/50 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
+                                autoFocus
+                            />
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowUrlInput(false)}
+                                    className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
+                                >
+                                    Load
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Content Sections */}
+            <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 text-gray-400">
+                <div id="about" className="space-y-4">
+                    <h3 className="text-xl font-bold text-white">About TOON</h3>
+                    <p className="leading-relaxed">
+                        TOON (Token Optimized Object Notation) is a serialization format designed to be efficient for Large Language Models.
+                        It reduces token usage while maintaining readability, making it ideal for AI context windows.
+                    </p>
+                    <a href="https://toonformat.dev/" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 inline-flex items-center gap-1">
+                        Learn more <ArrowRight className="w-3 h-3" />
+                    </a>
+                </div>
+
+                <div id="learn" className="space-y-4">
+                    <h3 className="text-xl font-bold text-white">How to Use</h3>
+                    <ul className="space-y-2 list-disc list-inside">
+                        <li>Drag and drop any JSON/YAML file</li>
+                        <li>Convert between formats instantly</li>
+                        <li>Optimize for LLM token limits</li>
+                        <li>Configure indentation and strictness</li>
+                    </ul>
+                </div>
+
+                <div id="changelog" className="space-y-4">
+                    <h3 className="text-xl font-bold text-white">Change Log</h3>
+                    <div className="space-y-3 text-sm">
+                        <div>
+                            <div className="text-white font-medium">v1.1.0</div>
+                            <div className="text-gray-500">Added Drag & Drop, URL loading, and UI refinements.</div>
+                        </div>
+                        <div>
+                            <div className="text-white font-medium">v1.0.0</div>
+                            <div className="text-gray-500">Initial release with JSON/YAML/TOON support.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Donation */}
+            <div className="mt-16 flex justify-center pb-8">
+                <a href='https://ko-fi.com/F1F6169085' target='_blank' rel="noopener noreferrer">
+                    <img height='36' style={{ border: 0, height: '36px' }} src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+                </a>
+            </div>
         </div >
     );
 };
