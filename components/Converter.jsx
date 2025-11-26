@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { convert, estimateTokens, calculateReduction } from '../utils/converter';
-import EthicalAds from './EthicalAds';
-import GoogleAdSense from './GoogleAdSense';
+//import GoogleAdSense from './GoogleAdSense';
 import CustomSelect from './ui/CustomSelect';
 import CodeEditor from './ui/CodeEditor';
 import { ArrowRightLeft, ArrowUpDown, Copy, AlertCircle, ArrowRight, Download, Settings, X } from 'lucide-react';
@@ -155,7 +154,7 @@ const Converter = () => {
                     </div>
                 </div>
                 <div className="hidden md:block">
-                    <GoogleAdSense />
+                    {/* <GoogleAdSense /> */}
                 </div>
             </div >
 
@@ -233,7 +232,7 @@ const Converter = () => {
 
                 {/* Mobile Ad Placement */}
                 <div className="md:hidden w-full flex justify-center">
-                    <GoogleAdSense />
+                    {/* <GoogleAdSense /> */}
                 </div>
 
                 {/* Middle Actions */}
