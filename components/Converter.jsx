@@ -269,7 +269,7 @@ const Converter = () => {
     ];
 
     return (
-        <div className="w-full max-w-7xl mx-auto p-6">
+        <div className="w-full max-w-7xl mx-auto p-3 md:p-6">
             {/* Top Section: Title & Ad */}
             <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
                 <div className="flex-1 pt-0">
@@ -278,7 +278,7 @@ const Converter = () => {
                     </h1>
                     <p className="text-xl text-gray-400 font-light mb-2 ml-2 flex flex-wrap items-center gap-4">
                         <span>Convert TOON to JSON/YAML and vs.</span>
-                        <a href='https://ko-fi.com/ljcamargo' target='_blank' rel="noopener noreferrer" className="inline-flex items-center opacity-70 hover:opacity-100 transition-opacity">
+                        <a href='https://ko-fi.com/ljcamargo' target='_blank' rel="noopener noreferrer" className="hidden md:inline-flex items-center opacity-70 hover:opacity-100 transition-opacity">
                             <img src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' alt='Buy Me a Coffee' className="h-6" />
                         </a>
                         <br />
@@ -446,6 +446,11 @@ const Converter = () => {
                         <ArrowUpDown className="w-5 h-5 text-gray-400 group-hover:text-purple-400 transition-colors lg:hidden" />
                         <span className="text-sm font-medium text-gray-400 group-hover:text-purple-400 transition-colors lg:hidden">Swap</span>
                     </button>
+
+                    {/* Mobile Donation Button */}
+                    <a href='https://ko-fi.com/ljcamargo' target='_blank' rel="noopener noreferrer" className="lg:hidden opacity-80 hover:opacity-100 transition-opacity">
+                        <img src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' alt='Buy Me a Coffee' className="h-9" />
+                    </a>
 
                     <div className="w-px h-full bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block"></div>
                 </div>

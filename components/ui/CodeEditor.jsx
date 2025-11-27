@@ -45,18 +45,22 @@ const CodeEditor = ({ value, onChange, language, readOnly = false, placeholder, 
                         margin: 0,
                         padding: '1.5rem', // Match textarea padding (p-6 = 1.5rem)
                         background: 'transparent',
-                        height: '100%',
+                        minHeight: '100%',
                         width: '100%',
                         fontSize: '0.875rem', // text-sm
                         lineHeight: '1.5rem', // Standard line height for text-sm usually, need to verify
                         fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-                        opacity: showPlaceholder ? 0.3 : 1, // Dim if showing placeholder
+                        opacity: showPlaceholder ? 0.15 : 1, // Dim if showing placeholder
+                        whiteSpace: 'pre-wrap', // Match textarea wrapping
+                        wordBreak: 'break-word', // Match textarea wrapping
+                        overflow: 'hidden', // Prevent internal scroll
                     }}
                     codeTagProps={{
                         style: {
                             fontFamily: 'inherit',
                         }
                     }}
+                    wrapLines={true}
                 >
                     {showPlaceholder ? placeholderValue : (value || ' ')}
                 </SyntaxHighlighter>
