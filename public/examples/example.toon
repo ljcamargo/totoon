@@ -1,2 +1,55 @@
-hello: world
-foo[2]: bar,baz
+articles[6]:
+  - id: 1
+    quote: All human beings are born free and equal in dignity and rights.
+    translations:
+      es: Todos los seres humanos nacen libres e iguales en dignidad y derechos.
+      fr: Tous les êtres humains naissent libres et égaux en dignité et en droits.
+      eo: Ĉiuj homoj naskiĝas liberaj kaj egalaj laŭ digno kaj rajtoj.
+    symbol: open_hands
+    keywords[3]: dignity,equality,humanity
+    priority: high
+  - id: 2
+    quote: "Everyone is entitled to all the rights and freedoms set forth in this Declaration, without distinction of any kind."
+    translations:
+      es: "Toda persona tiene todos los derechos y libertades proclamados en esta Declaración, sin distinción alguna."
+      fr: "Chacun peut se prévaloir de tous les droits et de toutes les libertés proclamés dans la présente Déclaration, sans distinction aucune."
+      eo: "Ĉiu rajtas je ĉiuj rajtoj kaj liberecoj en ĉi tiu Deklaracio, sen ia ajn distingo."
+    symbol: unbroken_circle
+    keywords[3]: inclusion,non-discrimination,fairness
+    priority: high
+  - id: 3
+    quote: "Everyone has the right to life, liberty and security of person."
+    translations:
+      es: "Toda persona tiene derecho a la vida, a la libertad y a la seguridad de su persona."
+      fr: "Toute personne a droit à la vie, à la liberté et à la sûreté de sa personne."
+      eo: "Ĉiu havas la rajton al vivo, al libereco kaj al persona sekureco."
+    symbol: steady_flame
+    keywords[3]: life,liberty,safety
+    priority: high
+  - id: 18
+    quote: "Everyone has the right to freedom of thought, conscience and religion."
+    translations:
+      es: "Toda persona tiene derecho a la libertad de pensamiento, de conciencia y de religión."
+      fr: "Toute personne a droit à la liberté de pensée, de conscience et de religion."
+      eo: "Ĉiu havas la rajton je libereco de penso, konscienco kaj religio."
+    symbol: open_eye
+    keywords[3]: thought,belief,conscience
+    priority: high
+  - id: 19
+    quote: Everyone has the right to freedom of opinion and expression.
+    translations:
+      es: Todo individuo tiene derecho a la libertad de opinión y de expresión.
+      fr: Tout individu a droit à la liberté d'opinion et d'expression.
+      eo: Ĉiu individuo havas la rajton je libereco de opinio kaj esprimo.
+    symbol: rising_wave
+    keywords[3]: expression,speech,ideas
+    priority: high
+  - id: 22
+    quote: "Everyone, as a member of society, has the right to social security."
+    translations:
+      es: "Toda persona, como miembro de la sociedad, tiene derecho a la seguridad social."
+      fr: "Toute personne, en tant que membre de la société, a droit à la sécurité sociale."
+      eo: "Ĉiu, kiel membro de la socio, havas la rajton je socia sekureco."
+    symbol: woven_threads
+    keywords[3]: solidarity,well-being,support
+    priority: high

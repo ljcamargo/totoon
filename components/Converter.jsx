@@ -33,9 +33,47 @@ const Converter = () => {
     // Flatten Control State
     const [flattenEnabled, setFlattenEnabled] = useState(false);
 
+    const [placeholderInput, setPlaceholderInput] = useState('');
+    const [placeholderOutput, setPlaceholderOutput] = useState('');
+
     useEffect(() => {
         handleConvert();
     }, [input, fromFormat, toFormat, indent, delimiter, keyFolding, flattenDepth, strict, expandPaths, flattenEnabled]);
+
+    // Update placeholders when formats change
+    useEffect(() => {
+        const fetchAndSetPlaceholders = async () => {
+            try {
+                const ext = fromFormat.toLowerCase();
+                const res = await fetch(`/examples/example.${ext}`);
+                if (!res.ok) return;
+                const text = await res.text();
+
+                setPlaceholderInput(text);
+
+                // Calculate output placeholder
+                const options = {
+                    indent,
+                    delimiter,
+                    keyFolding,
+                    flattenDepth: flattenEnabled ? Number(flattenDepth) : Infinity,
+                    strict,
+                    expandPaths
+                };
+                try {
+                    const converted = convert(text, fromFormat, toFormat, options);
+                    setPlaceholderOutput(converted);
+                } catch (convErr) {
+                    console.error("Placeholder conversion error:", convErr);
+                    setPlaceholderOutput('');
+                }
+            } catch (err) {
+                console.error("Error fetching placeholder:", err);
+            }
+        };
+
+        fetchAndSetPlaceholders();
+    }, [fromFormat, toFormat, indent, delimiter, keyFolding, flattenDepth, strict, expandPaths, flattenEnabled]);
 
     const handleConvert = () => {
         setError(null);
@@ -238,10 +276,13 @@ const Converter = () => {
                     <h1 className="text-5xl md:text-7xl font-black text-white mb-4 tracking-tight hidden md:block">
                         TOON <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">CONVERTER</span>
                     </h1>
-                    <p className="text-xl text-gray-400 font-light mb-2 ml-2">
-                        Convert TOON to JSON/YAML and vs.
+                    <p className="text-xl text-gray-400 font-light mb-2 ml-2 flex flex-wrap items-center gap-4">
+                        <span>Convert TOON to JSON/YAML and vs.</span>
+                        <a href='https://ko-fi.com/ljcamargo' target='_blank' rel="noopener noreferrer" className="inline-flex items-center opacity-70 hover:opacity-100 transition-opacity">
+                            <img src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' alt='Buy Me a Coffee' className="h-6" />
+                        </a>
                         <br />
-                        <span className="text-sm text-gray-500 mt-2 hidden md:block">Serialization Optimized for LLM token efficiency.</span>
+                        <span className="text-sm text-gray-500 mt-2 hidden md:block w-full">Serialization Optimized for LLM token efficiency.</span>
                     </p>
 
                     {/* Quick Actions */}
@@ -374,6 +415,7 @@ const Converter = () => {
                             }}
                             language={fromFormat}
                             placeholder="Paste your code here..."
+                            placeholderValue={placeholderInput}
                         />
 
                         {/* Drag Overlay Cue */}
@@ -516,6 +558,7 @@ const Converter = () => {
                             readOnly={true}
                             language={toFormat}
                             placeholder="Output will appear here..."
+                            placeholderValue={placeholderOutput}
                         />
                         {error && (
                             <div className="absolute bottom-6 left-6 right-6 bg-red-500/10 border border-red-500/20 text-red-200 text-sm p-4 rounded-xl backdrop-blur-md animate-in slide-in-from-bottom-2 z-10">
@@ -571,46 +614,118 @@ const Converter = () => {
             )}
 
             {/* Content Sections */}
-            <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 text-gray-400">
-                <div id="about" className="space-y-4">
-                    <h3 className="text-xl font-bold text-white">About TOON</h3>
-                    <p className="leading-relaxed">
-                        TOON (Token Optimized Object Notation) is a serialization format designed to be efficient for Large Language Models.
-                        It reduces token usage while maintaining readability, making it ideal for AI context windows.
-                    </p>
-                    <a href="https://toonformat.dev/" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 inline-flex items-center gap-1">
-                        Learn more <ArrowRight className="w-3 h-3" />
-                    </a>
-                </div>
+            <div className="mt-24 space-y-24 max-w-4xl mx-auto">
 
-                <div id="learn" className="space-y-4">
-                    <h3 className="text-xl font-bold text-white">How to Use</h3>
-                    <ul className="space-y-2 list-disc list-inside">
-                        <li>Drag and drop any JSON/YAML file</li>
-                        <li>Convert between formats instantly</li>
-                        <li>Optimize for LLM token limits</li>
-                        <li>Configure indentation and strictness</li>
-                    </ul>
-                </div>
+                {/* About TOON */}
+                <section id="about" className="space-y-6">
+                    <h2 className="text-3xl font-bold text-white border-b border-white/10 pb-4">About TOON</h2>
+                    <div className="space-y-6 text-gray-300 leading-relaxed text-lg">
+                        <p>
+                            TOON (Token Object Object Notation) is a data serialization format designed specifically for Large Language Models (LLMs).
+                            It optimizes token usage, making data representation more efficient for AI processing while maintaining human readability.
+                        </p>
+                        <p>
+                            TOON was created by the <a href="https://toonformat.dev/" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 transition-colors">TOON team</a> to address the inefficiencies of JSON and YAML when working with token-limited AI models.
+                            It is powered by the <code>@toon-format/toon</code> library.
+                        </p>
+                        <p>
+                            This converter is an open-source utility that allows you to easily convert between JSON, YAML, and TOON formats directly in your browser.
+                            It is designed to be fast, private, and easy to use.
+                        </p>
+                    </div>
+                </section>
 
-                <div id="changelog" className="space-y-4">
-                    <h3 className="text-xl font-bold text-white">Change Log</h3>
-                    <div className="space-y-3 text-sm">
-                        <div>
-                            <div className="text-white font-medium">v1.1.0</div>
-                            <div className="text-gray-500">Added Drag & Drop, URL loading, and UI refinements.</div>
+                {/* Why Token Optimization Matters */}
+                <section id="optimization" className="space-y-6">
+                    <h2 className="text-3xl font-bold text-white border-b border-white/10 pb-4">Why Token Optimization Matters</h2>
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-semibold text-purple-400">Cost Reduction</h3>
+                            <p className="text-gray-400 leading-relaxed">
+                                LLM providers charge by the token. By reducing the number of tokens required to represent your data, you directly reduce your API costs. TOON can often reduce token count by 20-40% compared to standard JSON.
+                            </p>
                         </div>
-                        <div>
-                            <div className="text-white font-medium">v1.0.0</div>
-                            <div className="text-gray-500">Initial release with JSON/YAML/TOON support.</div>
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-semibold text-blue-400">Expanded Context</h3>
+                            <p className="text-gray-400 leading-relaxed">
+                                Every model has a maximum context window. More efficient data serialization means you can fit more data, examples, or history into a single prompt, enabling more complex reasoning and better results.
+                            </p>
+                        </div>
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-semibold text-green-400">Faster Processing</h3>
+                            <p className="text-gray-400 leading-relaxed">
+                                Fewer tokens mean less computation for the model. This translates to lower latency and faster response times for your applications, improving the overall user experience.
+                            </p>
+                        </div>
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-semibold text-pink-400">Cleaner Prompts</h3>
+                            <p className="text-gray-400 leading-relaxed">
+                                TOON removes much of the syntactic noise (braces, quotes, commas) found in JSON. This helps the model focus on the actual data content rather than the formatting structure.
+                            </p>
                         </div>
                     </div>
-                </div>
+                </section>
+
+                {/* How to Use */}
+                <section id="learn" className="space-y-6">
+                    <h2 className="text-3xl font-bold text-white border-b border-white/10 pb-4">How to Use</h2>
+                    <div className="bg-[#0f0f0f] border border-white/10 rounded-2xl p-8">
+                        <ul className="space-y-4 text-gray-300">
+                            <li className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-sm font-bold">1</span>
+                                <span><strong>Input Data:</strong> Paste your JSON or YAML into the left editor, drop a file, or load from a URL.</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-sm font-bold">2</span>
+                                <span><strong>Select Formats:</strong> Choose your source format (if not auto-detected) and your desired destination format (e.g., TOON).</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-sm font-bold">3</span>
+                                <span><strong>Configure:</strong> Use the settings icon to adjust indentation, strictness, or flattening options to optimize the output further.</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-sm font-bold">4</span>
+                                <span><strong>Use Output:</strong> Copy the converted code or download it as a file to use in your LLM prompts or application.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                {/* Change Log */}
+                <section id="changelog" className="space-y-6">
+                    <h2 className="text-3xl font-bold text-white border-b border-white/10 pb-4">Change Log</h2>
+                    <div className="space-y-6">
+                        <div className="border-l-2 border-purple-500/30 pl-6 py-2">
+                            <div className="flex items-center gap-3 mb-2">
+                                <span className="text-lg font-bold text-white">v1.1.0</span>
+                                <span className="px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 text-xs font-medium">Current</span>
+                                <span className="text-gray-500 text-sm">November 2025</span>
+                            </div>
+                            <ul className="list-disc list-inside text-gray-400 space-y-1">
+                                <li>Added Drag & Drop file support</li>
+                                <li>Added URL loading capability</li>
+                                <li>Improved UI with "Get Started" guide</li>
+                                <li>Enhanced mobile responsiveness</li>
+                            </ul>
+                        </div>
+                        <div className="border-l-2 border-white/10 pl-6 py-2">
+                            <div className="flex items-center gap-3 mb-2">
+                                <span className="text-lg font-bold text-gray-300">v1.0.0</span>
+                                <span className="text-gray-500 text-sm">October 2025</span>
+                            </div>
+                            <ul className="list-disc list-inside text-gray-500 space-y-1">
+                                <li>Initial release</li>
+                                <li>Support for JSON, YAML, and TOON conversion</li>
+                                <li>Basic token estimation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
             </div>
 
-            {/* Donation */}
-            <div className="mt-16 flex justify-center pb-8">
-                <a href='https://ko-fi.com/ljcamargo' target='_blank' rel="noopener noreferrer">
+            {/* Bottom Donation */}
+            <div className="mt-24 flex justify-center pb-8">
+                <a href='https://ko-fi.com/ljcamargo' target='_blank' rel="noopener noreferrer" className="hover:scale-105 transition-transform">
                     <img height='36' style={{ border: 0, height: '36px' }} src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' />
                 </a>
             </div>
