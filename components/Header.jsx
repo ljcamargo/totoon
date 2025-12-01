@@ -9,6 +9,9 @@ const Header = () => {
                     <span className="font-bold text-xl tracking-tight text-white">
                         TOON <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">CONVERTER</span>
                     </span>
+                    <span className="hidden lg:block text-sm text-gray-500 font-medium ml-4 border-l border-white/10 pl-4">
+                        Serialization Optimized for LLM token efficiency
+                    </span>
                 </div>
                 <nav className="flex items-center gap-6 text-sm font-medium text-gray-400">
                     <a href="/info" className="hover:text-white transition-colors">Info</a>

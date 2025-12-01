@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { convert, estimateTokens, calculateReduction } from '../utils/converter';
-//import GoogleAdSense from './GoogleAdSense';
+import GoogleAdSense from './GoogleAdSense';
 import CustomSelect from './ui/CustomSelect';
 import CodeEditor from './ui/CodeEditor';
 import { ArrowRightLeft, ArrowUpDown, Copy, AlertCircle, ArrowRight, Download, Settings, X, ArrowDown } from 'lucide-react';
+import BuyCoffeeButton from './BuyCoffeeButton';
 
 const Converter = () => {
     const [input, setInput] = useState('');
@@ -271,22 +272,18 @@ const Converter = () => {
     return (
         <div className="w-full max-w-7xl mx-auto p-3 md:p-6">
             {/* Top Section: Title & Ad */}
-            <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
+            <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-4 lg:mb-8">
                 <div className="flex-1 pt-0">
                     <h1 className="text-5xl md:text-7xl font-black text-white mb-4 tracking-tight hidden md:block">
                         TOON <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">CONVERTER</span>
                     </h1>
-                    <p className="text-xl text-gray-400 font-light mb-2 ml-2 flex flex-wrap items-center gap-4">
+                    <p className="text text-gray-400 font-light mb-2 ml-2 flex flex-wrap items-center gap-4">
                         <span>Convert TOON to JSON/YAML and vs.</span>
-                        <a href='https://ko-fi.com/ljcamargo' target='_blank' rel="noopener noreferrer" className="hidden md:inline-flex items-center opacity-70 hover:opacity-100 transition-opacity">
-                            <img src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' alt='Buy Me a Coffee' className="h-6" />
-                        </a>
-                        <br />
-                        <span className="text-sm text-gray-500 mt-2 hidden md:block w-full">Serialization Optimized for LLM token efficiency.</span>
+                        <BuyCoffeeButton className="hidden md:inline-flex items-center" />
                     </p>
 
                     {/* Quick Actions */}
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-4 my-4">
                         <button
                             onClick={() => handleQuickAction('JSON', 'TOON')}
                             className="px-6 py-2 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm font-medium transition-colors flex items-center gap-2"
@@ -300,43 +297,44 @@ const Converter = () => {
                             TOON <ArrowRight className="w-3 h-3" /> JSON
                         </button>
                     </div>
+                    {/* Get Started Text */}
+                    <div className="mt-6 text-gray-400 text-lg flex flex-wrap items-center gap-2 animate-in fade-in slide-in-from-top-4 pl-2 w-full">
+                        <ArrowDown className="w-5 h-5 text-purple-400 animate-bounce hidden lg:block" />
+                        <span>
+                            Paste a {fromFormat} or an{' '}
+                            <button
+                                onClick={() => setShowUrlInput(true)}
+                                className="text-purple-400 hover:text-purple-300 underline decoration-dotted underline-offset-4 transition-colors font-medium"
+                            >
+                                URL
+                            </button>
+                            , drop a file,{' '}
+                            <label className="text-purple-400 hover:text-purple-300 underline decoration-dotted underline-offset-4 transition-colors cursor-pointer font-medium">
+                                browse
+                                <input
+                                    type="file"
+                                    className="hidden"
+                                    onChange={handleFileUpload}
+                                    accept=".json,.yaml,.yml,.toon,.txt"
+                                />
+                            </label>
+                            , or{' '}
+                            <button
+                                onClick={loadExample}
+                                className="text-purple-400 hover:text-purple-300 underline decoration-dotted underline-offset-4 transition-colors font-medium"
+                            >
+                                load an example
+                            </button>{' '}
+                            to begin.
+                        </span>
+                        <ArrowDown className="mt-1 w-5 h-5 text-purple-400 animate-bounce lg:hidden md:inline-flex" />
+                        <BuyCoffeeButton className="lg:hidden md:inline-flex ml-auto" />
+                    </div>
                 </div>
                 <div className="hidden md:block">
-                    {/* <GoogleAdSense /> */}
+                    <GoogleAdSense />
                 </div>
             </div >
-
-            {/* Get Started Text */}
-            <div className="mb-6 text-gray-400 text-lg flex flex-wrap items-center gap-2 animate-in fade-in slide-in-from-top-4 pl-2">
-                <ArrowDown className="w-5 h-5 text-purple-400 animate-bounce" />
-                <span>
-                    Paste a {fromFormat} or an{' '}
-                    <button
-                        onClick={() => setShowUrlInput(true)}
-                        className="text-purple-400 hover:text-purple-300 underline decoration-dotted underline-offset-4 transition-colors font-medium"
-                    >
-                        URL
-                    </button>
-                    , drop a file,{' '}
-                    <label className="text-purple-400 hover:text-purple-300 underline decoration-dotted underline-offset-4 transition-colors cursor-pointer font-medium">
-                        browse
-                        <input
-                            type="file"
-                            className="hidden"
-                            onChange={handleFileUpload}
-                            accept=".json,.yaml,.yml,.toon,.txt"
-                        />
-                    </label>
-                    , or{' '}
-                    <button
-                        onClick={loadExample}
-                        className="text-purple-400 hover:text-purple-300 underline decoration-dotted underline-offset-4 transition-colors font-medium"
-                    >
-                        load an example
-                    </button>{' '}
-                    to begin.
-                </span>
-            </div>
 
             {/* Converter Section */}
             <div className="flex flex-col lg:flex-row gap-6 items-stretch">
@@ -432,11 +430,11 @@ const Converter = () => {
 
                 {/* Mobile Ad Placement */}
                 <div className="md:hidden w-full flex justify-center">
-                    {/* <GoogleAdSense /> */}
+                    <GoogleAdSense />
                 </div>
 
                 {/* Middle Actions */}
-                <div className="flex lg:flex-col items-center justify-center gap-4">
+                <div className="flex lg:flex-col items-center justify-center gap-4 align-middle md:justify-center md:items-center sm:justify-center sm:items-center">
                     <button
                         onClick={handleSwap}
                         className="group px-6 py-3 lg:p-4 bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 rounded-full transition-all duration-300 flex items-center gap-2"
@@ -447,10 +445,7 @@ const Converter = () => {
                         <span className="text-sm font-medium text-gray-400 group-hover:text-purple-400 transition-colors lg:hidden">Swap</span>
                     </button>
 
-                    {/* Mobile Donation Button */}
-                    <a href='https://ko-fi.com/ljcamargo' target='_blank' rel="noopener noreferrer" className="lg:hidden opacity-80 hover:opacity-100 transition-opacity">
-                        <img src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' alt='Buy Me a Coffee' className="h-9" />
-                    </a>
+                    <BuyCoffeeButton className="lg:hidden md:self-center sm:self-center" />
 
                     <div className="w-px h-full bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block"></div>
                 </div>
@@ -730,9 +725,7 @@ const Converter = () => {
 
             {/* Bottom Donation */}
             <div className="mt-24 flex justify-center pb-8">
-                <a href='https://ko-fi.com/ljcamargo' target='_blank' rel="noopener noreferrer" className="hover:scale-105 transition-transform">
-                    <img height='36' style={{ border: 0, height: '36px' }} src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' />
-                </a>
+                <BuyCoffeeButton className="hover:scale-105 transition-transform" />
             </div>
         </div >
     );
