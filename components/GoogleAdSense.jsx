@@ -13,12 +13,15 @@ const GoogleAdSense = () => {
     const slotId = process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_SLOT_ID;
 
     if (!clientId || !slotId || clientId.includes('XXXX')) {
+        console.log("NO AD")
         return (
             <div className="w-[300px] h-[250px] bg-white/5 border border-white/10 rounded-xl flex flex-col items-center justify-center text-center p-4">
                 <span className="text-xs font-mono text-gray-500 mb-2">AdSense Placeholder</span>
                 <span className="text-xs text-gray-600">Configure env vars to see ads</span>
             </div>
         );
+    } else {
+        console.log("DO AD")
     }
 
     return (
