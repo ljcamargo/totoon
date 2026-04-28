@@ -37,6 +37,17 @@ const Converter = () => {
     const [placeholderInput, setPlaceholderInput] = useState('');
     const [placeholderOutput, setPlaceholderOutput] = useState('');
 
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     useEffect(() => {
         handleConvert();
     }, [input, fromFormat, toFormat, indent, delimiter, keyFolding, flattenDepth, strict, expandPaths, flattenEnabled]);
@@ -331,9 +342,11 @@ const Converter = () => {
                         <BuyCoffeeButton className="lg:hidden md:inline-flex ml-auto" />
                     </div>
                 </div>
-                <div className="hidden md:block">
-                    <GoogleAdSense />
-                </div>
+                {!isMobile && (
+                    <div className="hidden md:block">
+                        <GoogleAdSense />
+                    </div>
+                )}
             </div >
 
             {/* Converter Section */}
@@ -429,9 +442,11 @@ const Converter = () => {
                 </div >
 
                 {/* Mobile Ad Placement */}
-                <div className="md:hidden w-full flex justify-center">
-                    <GoogleAdSense />
-                </div>
+                {isMobile && (
+                    <div className="md:hidden w-full flex justify-center">
+                        <GoogleAdSense />
+                    </div>
+                )}
 
                 {/* Middle Actions */}
                 <div className="flex lg:flex-col items-center justify-center gap-4 align-middle md:justify-center md:items-center sm:justify-center sm:items-center">
